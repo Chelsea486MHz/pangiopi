@@ -1,0 +1,8 @@
+gsmHat
+gnupg
+smbus2
+gunicorn
+Flask
+qrcode
+PySSTV
+PIL

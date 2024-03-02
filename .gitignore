@@ -1,0 +1,3 @@
+./sender/venv
+./ingest/venv
+./listener/venv

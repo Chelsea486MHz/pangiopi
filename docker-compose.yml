@@ -1,0 +1,73 @@
+#
+# Don't forget to configure .env !
+#
+
+version: '3'
+
+networks:
+  - network_pangio
+
+services:
+  # Stores ingested data
+  pangio-db:
+    container_name: pangio-db
+    image: mariadb
+    restart: unless-stopped
+    networks:
+      - network_pangio
+    environment:
+      TZ: ${PANGIO_TIMEZONE}
+      PUID: ${PANGIO_UID}
+      PGID: ${PANGIO_GID}
+      MYSQL_USER: pangio
+      MYSQL_DATABASE: pangio
+      MYSQL_PASSWORD: ${PANGIO_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${PANGIO_DB_PASSWORD_ROOT}
+
+  # Exfiltrates data over GSM
+  pangio-sender:
+    container_name: pangio-sender
+    build:
+      context: ./sender
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - network_pangio
+    environment:
+      TZ: ${PANGIO_TIMEZONE}
+      PUID: ${PANGIO_UID}
+      PGID: ${PANGIO_GID}
+      GSM_PORT: ${PANGIO_GSM_PORT}
+      GSM_BAUDRATE: ${PANGIO_GSM_BAUDRATE}
+      REMOTE_NUMBER: ${PANGIO_GSM_REMOTE_NUMBER}
+
+  # Ingests data from sensors/devices
+  pangio-ingest:
+    container_name: pangio-ingest
+    build:
+      context: ./ingest
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - network_pangio
+    environment:
+      TZ: ${PANGIO_TIMEZONE}
+      PUID: ${PANGIO_UID}
+      PGID: ${PANGIO_GID}
+
+  # Listens for incoming SMS
+  pangio-listener:
+    container_name: pangio-listener
+    build:
+      context: ./listener
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - network_pangio
+    environment:
+      TZ: ${PANGIO_TIMEZONE}
+      PUID: ${PANGIO_UID}
+      PGID: ${PANGIO_GID}
+      GSM_PORT: ${PANGIO_GSM_PORT}
+      GSM_BAUDRATE: ${PANGIO_GSM_BAUDRATE}
+      REMOTE_NUMBER: ${PANGIO_GSM_REMOTE_NUMBER}
