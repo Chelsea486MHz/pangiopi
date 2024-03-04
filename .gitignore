@@ -1,4 +1,4 @@
-./sender/venv
-./ingest/venv
-./listener/venv
-./flipper/venv
+sender/venv
+ingest/venv
+listener/venv
+flipper/venv
