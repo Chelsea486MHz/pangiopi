@@ -8,7 +8,7 @@
 
 ## What is PangioPi?
 
-The PangioPi is a sneaky little hacking companion that is easy to hide and use as a remote attack platform.
+The PangioPi is a sneaky little hacking companion that is easy to hide and use as a remote attack platform. It is meant to be controlled a Flipper Zero, but any computer will do.
 
 The PangioPi continuously ingests and sniffs the following data:
 - Wi-Fi access points
@@ -21,7 +21,7 @@ It can exfiltrate the data with PGP over the following transport layers:
 - SMS
 - 3G mobile data
 
-You can also SSH into your PangioPi through the Tor network!
+You can also SSH into your PangioPi through the Tor network, and eavesdrop on its surroundings by listening in real time to what its microphone is picking up.
 
 ## Installation guide
 
@@ -40,11 +40,15 @@ See [user-manual.md](./docs/user-manual.md)
 The PangioPI software stack uses the following components:
 - `pangio-sender`: API server to exfiltrate data
 - `pangio-ingest`: Black-hole that ingests as much data as possible
+- `pangio-flipper`: Remote control app for the Flipper Zero
+- `pangio-listener`: Listens for commands from the Flipper Zero
 
 As for the hardware, the following components are used:
 - Raspberry Pi Zero 2W
 - Pi Zero UPS lite
 - Waveshare SIM868 HAT
+
+On the Flipper Zero side, a SIM800 is wired to the UART.
 
 Additionnaly, third-party software is used:
 - `mariadb`: to store ingested data
