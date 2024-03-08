@@ -20,8 +20,14 @@ FROM python:3.11-slim
 # Install dependencies
 RUN apt update && \
     apt install -y --no-install-recommends \
+    build-essential && \
+    python3-dev && \
+    libgirepository1.0-dev && \
     gnupg2 && \
     liblzma-dev && \
+    ffmpeg && \
+    libcairo2 && \
+    libcairo2-dev && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 

@@ -7,7 +7,7 @@ from PIL import Image
 import tempfile
 import qrcode
 import base64
-import lzma
+import lzma 
 import gnupg
 import os
 
@@ -53,19 +53,18 @@ def craft_pgp_payload(message):
 
     # Encode as base64 + get signature + get checksum
     data = base64.b64encode(bytes(data))
-    signature = gpg.sign(data)
     checksum = gpg.gen_md5(data)
+    signature = gpg.sign(data)
 
     # Craft the SMS payload
     payload = {
         'data': data,
-        'checksum': checksum,
+        'md5': checksum,
         'signature': signature
     }
 
-    # Compress the SMS payload, then base64
+    # Compress the SMS payload using the LZMA algorithm
     compressed_payload = lzma.compress(bytes(payload))
-    compressed_payload = base64.b64encode(bytes(payload))
 
     # Encrypt the payload
     fingerprint = gpg.list_keys()[0]['fingerprint']
@@ -102,19 +101,12 @@ def api_send_call():
         )
         qr.add_data(chunks[i])
         qr.make(fit=True)
-        img = qr.make_image(fill_color="black", back_color="white")
-
-        # Save the QRcode
-        path_image = os.path.join(tmpdir, 'qr.png')
-        img.save(path_image)
-
-        # Resize the saved QR code image to 160x120
-        img_resized = Image.open(path_image).resize((160, 120))
+        img = qr.make_image(fill_color="black", back_color="white").resize((160, 120))  # Resize to 160x120 for Robot8BW
 
         # Encode the QRcode into SSTV Robot8BW
         filename = 'sstv_' + str(i) + '.wav'
         path_sstv = os.path.join(tmpdir, filename)
-        grayscale.Robot8BW(image=img_resized, samples_per_sec=48000, bits=16).write_wav(filename=path_sstv)
+        grayscale.Robot8BW(image=img, samples_per_sec=48000, bits=16).write_wav(filename=path_sstv)
 
     # Make the phone call!
     call_duration = 8 * len(chunks)  # Each chunk takes 8 seconds to transmit
@@ -124,14 +116,6 @@ def api_send_call():
         path_sstv = os.path.join(tmpdir, filename)
         playsound(path_sstv)
     gsm.HangUp()
-
-    # Overwrite the qrcode data on the filesystem
-    with open(path_image, "ba+") as target:
-        size = target.tell()
-    with open(path_image, "br+") as target:
-        for i in range(3):  # Number of shred passes
-            target.seek(0)
-            target.write(os.urandom(size))
 
     # Overwrite the sstv data on the filesystem
     with open(path_sstv, "ba+") as target:

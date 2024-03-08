@@ -5,4 +5,7 @@ gunicorn
 Flask
 qrcode
 PySSTV
-PIL
+pillow
+RPi.GPIO
+pygobject
+playsound
