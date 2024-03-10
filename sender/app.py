@@ -11,18 +11,18 @@ import lzma
 import gnupg
 import os
 
-gpg = gnupg.GPG()
+gpg = gnupg.GPG(gnupghome=os.environ.get('PGP_HOME_DIRECTORY'))
 gsm = GSMHat(os.environ.get('GSM_PORT'), os.environ.get('GSM_BAUDRATE'))
 app = Flask(__name__)
 pi_ups = piups.PiUPS()
 
 # Load the GPG keys from the files
 try:
-    gpg.import_keys(open("./pgp/private.key").read())
+    gpg.import_keys(open("/pgp/private.key").read())
 except FileNotFoundError:
     print("Private key not found")
 try:
-    gpg.import_keys(open("./pgp/remote_public.key").read())
+    gpg.import_keys(open("/pgp/remote_public.key").read())
 except FileNotFoundError:
     print("Public key not found")
 
@@ -46,8 +46,8 @@ def craft_pgp_payload(message):
             'course': GPSObj.Course
         },
         'battery': {
-            'voltage': piups.readVoltage(pi_ups),
-            'capacity': piups.readCapacity(pi_ups)
+            'voltage': piups.readVoltage(),
+            'capacity': piups.readCapacity()
         }
     }
 
@@ -126,7 +126,6 @@ def api_send_call():
             target.write(os.urandom(size))
 
     # Remove the filesystem entries
-    os.remove(path_image)
     os.remove(path_sstv)
 
     return {'status': 'success'}, 200

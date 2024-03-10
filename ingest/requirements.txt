@@ -1,0 +1,4 @@
+mysql-connector-python
+smbus2
+gsmHat
+scapy

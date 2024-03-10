@@ -54,9 +54,6 @@ RUN groupadd -r -g 1000 $APP_USER && \
 COPY --from=image-build /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install the PGP data
-COPY --chown=$APP_USER:$APP_USER ./pgp/. $APP_DIR/pgp
-
 # Install the app
 COPY --chown=$APP_USER:$APP_USER ./app.py $APP_DIR/app.py
 COPY --chown=$APP_USER:$APP_USER ./gunicorn_config.py $APP_DIR/gunicorn_config.py

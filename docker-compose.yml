@@ -19,8 +19,8 @@ services:
       TZ: ${PANGIO_TIMEZONE}
       PUID: ${PANGIO_UID}
       PGID: ${PANGIO_GID}
-      MYSQL_USER: pangio
-      MYSQL_DATABASE: pangio
+      MYSQL_USER: ${PANGIO_DB_USER}
+      MYSQL_DATABASE: ${PANGIO_DB_NAME}
       MYSQL_PASSWORD: ${PANGIO_DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${PANGIO_DB_PASSWORD_ROOT}
 
@@ -33,6 +33,10 @@ services:
     restart: unless-stopped
     networks:
       - network_pangio
+    volumes:
+      - ${PANGIO_PGP_FOLDER}:/pgp:ro
+    devices:
+      - /dev/hwrng:/dev/hwrng:rw
     environment:
       TZ: ${PANGIO_TIMEZONE}
       PUID: ${PANGIO_UID}
@@ -54,6 +58,11 @@ services:
       TZ: ${PANGIO_TIMEZONE}
       PUID: ${PANGIO_UID}
       PGID: ${PANGIO_GID}
+      MYSQL_HOST: pangio-db
+      MYSQL_USER: ${PANGIO_DB_USER}
+      MYSQL_DATABASE: ${PANGIO_DB_NAME}
+      MYSQL_PASSWORD: ${PANGIO_DB_PASSWORD}
+      PANGIO_WAP_SNIFFING_INTERFACE: ${PANGIO_WAP_SNIFFING_INTERFACE}
 
   # Listens for incoming SMS
   pangio-listener:
@@ -64,6 +73,11 @@ services:
     restart: unless-stopped
     networks:
       - network_pangio
+    volumes:
+      - ${PANGIO_PGP_FOLDER}:/pgp:ro
+    devices:
+      - /dev/hwrng:/dev/hwrng:rw
+      - /dev/ttyUSB0:/dev/ttyUSB0:rw
     environment:
       TZ: ${PANGIO_TIMEZONE}
       PUID: ${PANGIO_UID}
