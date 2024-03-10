@@ -1,0 +1,6 @@
+python3
+rng-tools
+ppp
+ca-certificates
+curl
+tor

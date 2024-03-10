@@ -6,6 +6,10 @@ version: '3'
 
 networks:
   network_pangio:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${PANGIO_SUBNET}
 
 services:
   # Stores ingested data

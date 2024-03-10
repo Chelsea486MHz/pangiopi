@@ -1,0 +1,10 @@
+[Unit]
+Description=PPP over Serial link
+After=network.target
+
+[Service]
+Exec=/usr/sbin/pppd call gprs
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

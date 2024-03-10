@@ -8,7 +8,7 @@
 
 ## What is PangioPi?
 
-The PangioPi is a sneaky little hacking companion that is easy to hide and use as a remote attack platform. It is meant to be controlled a Flipper Zero, but any computer will do.
+The PangioPi is a sneaky little hacking companion that is easy to hide and use as a remote attack platform. It is meant to be controlled from a WebUI over Tor.
 
 The PangioPi continuously ingests and sniffs the following data:
 - Wi-Fi access points
@@ -25,13 +25,26 @@ You can also SSH into your PangioPi through the Tor network, and eavesdrop on it
 
 ## Installation guide
 
-See [installation.md](./docs/installation.md)
+You'll need a fresh Ubuntu Server 64 installation on your Raspberry Pi Zero 2WH.
+
+Clone the repo and navigate to `installation`. From there, run the shell script as an unpriviledged user:
+
+```
+$ chmod +x get_pangio.sh
+$ ./get_pangio.sh
+```
+
+If you want to manually install everything, see [installation.md](./docs/installation.md)
 
 ## Configuration guide
+
+If you're not using the installation script, you have to follow the configuration guide.
 
 See [configuration.md](./docs/configuration.md)
 
 ## User manual
+
+This manual is here to help you make the most of your Pangio!
 
 See [user-manual.md](./docs/user-manual.md)
 
@@ -40,21 +53,14 @@ See [user-manual.md](./docs/user-manual.md)
 The PangioPI software stack uses the following components:
 - `pangio-sender`: API server to exfiltrate data
 - `pangio-ingest`: Black-hole that ingests as much data as possible
-- `pangio-flipper`: Remote control app for the Flipper Zero
 - `pangio-listener`: Listens for commands from the Flipper Zero
 
 As for the hardware, the following components are used:
-- Raspberry Pi Zero 2W
+- Raspberry Pi Zero 2WH
 - Pi Zero UPS lite
 - Waveshare SIM868 HAT
 
-On the Flipper Zero side, a SIM800 is wired to the UART.
-
-Additionnaly, third-party software is used:
-- `mariadb`: to store ingested data
-- `tor`: to expose SSH
-
-As well as the following libraries:
+The following libraries have been used:
 - [gsmHat](https://github.com/Civlo85/gsmHat): to use the SIM868 expansion board
 
 ## Contributions

@@ -1,9 +1,8 @@
-#!/bin/python3
 import gnupg
 import os
 
 # Initialize PGP
-gpg = gnupg.GPG()
+gpg = gnupg.GPG(homedir='/home/pangio/.gnupg')
 gpg.encoding = 'utf-8'
 
 # Generate the private key

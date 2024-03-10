@@ -57,7 +57,7 @@ Restart the service:
 
 `$ sudo systemctl restart rng-tools`
 
-Your Pangio relies on 2G networking to talk home. We therefore need to configure 2G broadband connectivity. Install `ppp`:
+Your Pangio relies on 2G/2G+ networking. We therefore need to configure dial-up connectivity. Install `ppp`:
 
 `$ sudo apt install -y ppp`
 
