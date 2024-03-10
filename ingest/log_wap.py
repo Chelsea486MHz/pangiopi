@@ -36,3 +36,5 @@ def process_packet(packet):
 # Sniff for WAPs
 # Triggers the callback function for each packet
 sniff(iface=os.environ.get("PANGIO_WAP_SNIFFING_INTERFACE"), prn=process_packet, store=0)
+
+sql_connection.close()
