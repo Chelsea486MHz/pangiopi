@@ -120,14 +120,14 @@ fi
 # Install Docker
 echo -e "${TEXT_INFO} Installing Docker packages"
 for pkg in ${docker_pkg_to_install}; do
-    echo -n -e "${TEXT_INFO} Installing Docker package \'$pkg\'"
+    echo -n -e "${TEXT_INFO} Installing Docker package $pkg"
     sudo apt install ${docker_pkg_to_install} -y &>> ${LOGFILE}
     if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
-        echo -e "${TEXT_SUCC} Installed Docker package \'$pkg\'"
+        echo -e "${TEXT_SUCC} Installed Docker package $pkg"
     else
     echo -n -e "${LINE_RESET}"
-        echo -e "${TEXT_FAIL} Failed to install Docker package \'$pkg\'"
+        echo -e "${TEXT_FAIL} Failed to install Docker package $pkg"
         exit 255
     fi
 done
@@ -146,17 +146,6 @@ if [ $? -eq 0 ]; then
 else
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_FAIL} Failed to stop hardware RNG"
-fi
-
-# Stop pppd
-echo -n -e "${TEXT_INFO} Stopping pppd"
-sudo systemctl stop ppphat.service &>> ${LOGFILE}
-if [ $? -eq 0 ]; then
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Stopped pppd"
-else
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to stop pppd"
 fi
 
 # Stop SSH
@@ -286,6 +275,18 @@ if [ $? -eq 0 ]; then
 else
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_FAIL} Failed to install SSH server configuration"
+    exit 255
+fi
+
+# Remove existing SSH host keys
+echo -n -e "${TEXT_INFO} Removing existing SSH host keys"
+sudo rm /etc/ssh/ssh_host_* &>> ${LOGFILE}
+if [ $? -eq 0 ]; then
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_SUCC} Removed existing SSH host keys"
+else
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Failed to remove existing SSH host keys"
     exit 255
 fi
 
