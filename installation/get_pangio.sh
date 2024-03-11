@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bashapt-get
 
 # Resets the line
 LINE_RESET='\e[2K\r'
@@ -32,7 +32,7 @@ echo ""
 
 # Install the required packages
 echo -n -e "${TEXT_INFO} Running apt-update"
-sudo apt update 2>&1 ${LOGFILE}
+sudo apt update &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_INFO} Updated the package list"
@@ -57,10 +57,10 @@ for pkg in ${docker_pkg_to_remove}; do
 done
 
 # Add the official Docker PGP key
-sudo install -m 0755 -d /etc/apt/keyrings 2>&1 ${LOGFILE}
+sudo install -m 0755 -d /etc/apt/keyrings &>> ${LOGFILE}
 
 echo -n -e "${TEXT_INFO} Adding the official Docker PGP key"
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc 2>&1 ${LOGFILE}
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Added the official Docker PGP key"
@@ -71,7 +71,7 @@ else
 fi
 
 echo -n -e "${TEXT_INFO} Setting correct key permissions"
-sudo chmod a+r /etc/apt/keyrings/docker.asc 2>&1 ${LOGFILE}
+sudo chmod a+r /etc/apt/keyrings/docker.asc &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Set correct key permissions"
@@ -91,7 +91,7 @@ echo -e "${TEXT_SUCC} Added the Docker repository"
 
 # Run apt-update again
 echo -n -e "${TEXT_INFO} Running apt-update"
-sudo apt update 2>&1 ${LOGFILE}
+sudo apt update &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Updated the package list"
@@ -103,7 +103,7 @@ fi
 
 # Install Docker
 echo -n -e "${TEXT_INFO} Installing Docker"
-sudo apt install ${docker_pkg_to_install} -y 2>&1 ${LOGFILE}
+sudo apt install ${docker_pkg_to_install} -y &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Installed Docker"
@@ -119,7 +119,7 @@ fi
 
 # Stop hardware RNG
 echo -n -e "${TEXT_INFO} Stopping hardware RNG"
-sudo systemctl stop rng-tools 2>&1 ${LOGFILE}
+sudo systemctl stop rng-tools &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Stopped hardware RNG"
@@ -131,7 +131,7 @@ fi
 
 # Stop pppd
 echo -n -e "${TEXT_INFO} Stopping pppd"
-sudo systemctl stop ppphat.service 2>&1 ${LOGFILE}
+sudo systemctl stop ppphat.service &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Stopped pppd"
@@ -143,7 +143,7 @@ fi
 
 # Stop SSH
 echo -n -e "${TEXT_INFO} Stopping SSH"
-sudo systemctl stop ssh 2>&1 ${LOGFILE}
+sudo systemctl stop ssh &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Stopped SSH"
@@ -155,7 +155,7 @@ fi
 
 # Stop Docker
 echo -n -e "${TEXT_INFO} Stopping Docker"
-sudo systemctl stop docker 2>&1 ${LOGFILE}
+sudo systemctl stop docker &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Stopped Docker"
@@ -183,7 +183,7 @@ fi
 
 # Create Docker group
 echo -n -e "${TEXT_INFO} Creating Docker group"
-sudo groupadd docker 2>&1 ${LOGFILE}
+sudo groupadd docker &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Created Docker group"
@@ -195,7 +195,7 @@ fi
 
 # Add current user to Docker group
 echo -n -e "${TEXT_INFO} Adding current user to Docker group"
-sudo usermod -aG docker $USER 2>&1 ${LOGFILE}
+sudo usermod -aG docker $USER &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Added current user to Docker group"
@@ -207,7 +207,7 @@ fi
 
 # Configure rng-tools
 echo -n -e "${TEXT_INFO} Configuring hardware RNG"
-sudo sed -i 's/#HRNGDEVICE/HRNGDEVICE/g' /etc/default/rng-tools-debian 2>&1 ${LOGFILE}
+sudo sed -i 's/#HRNGDEVICE/HRNGDEVICE/g' /etc/default/rng-tools-debian &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Configured hardware RNG"
@@ -219,7 +219,7 @@ fi
 
 # Configure dial-up connection
 echo -n -e "${TEXT_INFO} Configuring dial-up connection"
-sudo cp gprs_peer.txt /etc/ppp/peers/gprs 2>&1 ${LOGFILE}
+sudo cp gprs_peer.txt /etc/ppp/peers/gprs &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Configured dial-up connection"
@@ -231,7 +231,7 @@ fi
 
 # Create a systemd unit
 echo -n -e "${TEXT_INFO} Creating systemd unit for pppd"
-sudo cp ppphat.service /etc/systemd/system/ppphat.service 2>&1 ${LOGFILE}
+sudo cp ppphat.service /etc/systemd/system/ppphat.service &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Created systemd unit for pppd"
@@ -243,7 +243,7 @@ fi
 
 # Configure the Tor proxy
 echo -n -e "${TEXT_INFO} Installing Tor SOCKS5 proxy configuration"
-sudo cp torrc /etc/tor/torrc 2>&1 ${LOGFILE}
+sudo cp torrc /etc/tor/torrc &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Installed the Tor SOCKS5 proxy configuration"
@@ -255,7 +255,7 @@ fi
 
 # Install our sshd_config file
 echo -n -e "${TEXT_INFO} Installing SSH server configuration"
-sudo cp sshd_config /etc/ssh/sshd_config 2>&1 ${LOGFILE}
+sudo cp sshd_config /etc/ssh/sshd_config &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Installed SSH server configuration"
@@ -283,7 +283,7 @@ fi
 
 # Reload systemd
 echo -n -e "${TEXT_INFO} Reloading systemd"
-sudo systemctl daemon-reload 2>&1 ${LOGFILE}
+sudo systemctl daemon-reload &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Reloaded systemd"
@@ -295,7 +295,7 @@ fi
 
 # Enable and start hardware RNG
 echo -n -e "${TEXT_INFO} Restarting hardware RNG"
-sudo systemctl enable --now rng-tools 2>&1 ${LOGFILE}
+sudo systemctl enable --now rng-tools &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Restarted hardware RNG"
@@ -307,7 +307,7 @@ fi
 
 # Enable and start pppd
 echo -e "${TEXT_INFO} Enabling and starting pppd"
-sudo systemctl enable --now ppphat.service 2>&1 ${LOGFILE}
+sudo systemctl enable --now ppphat.service &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -e "${TEXT_SUCC} Enabled and started pppd"
 else
@@ -317,7 +317,7 @@ fi
 
 # Enable and start SSH
 echo -n -e "${TEXT_INFO} Enabling and starting SSH"
-sudo systemctl enable --now ssh 2>&1 ${LOGFILE}
+sudo systemctl enable --now ssh &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Enabled and started SSH"
@@ -329,7 +329,7 @@ fi
 
 # Enable and start Docker
 echo -n -e "${TEXT_INFO} Enabling and starting Docker"
-sudo systemctl enable --now docker 2>&1 ${LOGFILE}
+sudo systemctl enable --now docker &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Enabled and started Docker"
@@ -341,7 +341,7 @@ fi
 
 # Enable and start Tor
 echo -n -e "${TEXT_INFO} Enabling and starting the Tor SOCKS5 proxy"
-sudo systemctl enable --now tor@default.service 2>&1 ${LOGFILE}
+sudo systemctl enable --now tor@default.service &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Enabled and started the Tor SOCKS5 proxy"
@@ -357,7 +357,7 @@ fi
 
 # Create the Pangio user
 echo -n -e "${TEXT_INFO} Creating the Pangio user"
-sudo useradd -m pangio 2>&1 ${LOGFILE}
+sudo useradd -m pangio &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Created the Pangio user"
@@ -369,7 +369,7 @@ fi
 
 # Create a venv for pangio
 echo -n -e "${TEXT_INFO} Creating a venv for pangio"
-sudo -u pangio python3 -m venv /home/pangio/venv 2>&1 ${LOGFILE}
+sudo -u pangio python3 -m venv /home/pangio/venv &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Created a venv for pangio"
@@ -381,7 +381,7 @@ fi
 
 # Install gnupg in the venv
 echo -n -e "${TEXT_INFO} Installing gnupg in the venv"
-sudo -u pangio /home/pangio/venv/bin/pip install gnupg 2>&1 ${LOGFILE}
+sudo -u pangio /home/pangio/venv/bin/pip install gnupg &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Installed gnupg in the venv"
@@ -397,7 +397,7 @@ fi
 echo -n -e "${TEXT_INFO} Creating the Pangio user PGP key"
 cp init_pgp.py /home/pangio/init_pgp.py
 chown pangio:pangio /home/pangio/init_pgp.py
-sudo -u pangio -c 'python3 /home/pangio/init_pgp.py' 2>&1 ${LOGFILE}
+sudo -u pangio -c 'python3 /home/pangio/init_pgp.py' &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Created the Pangio user PGP key"
@@ -409,7 +409,7 @@ fi
 
 # Remove the script
 echo -n -e "${TEXT_INFO} Removing the script"
-rm /home/pangio/init_pgp.py 2>&1 ${LOGFILE}
+rm /home/pangio/init_pgp.py &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Removed the script"
@@ -421,7 +421,7 @@ fi
 
 # Remove the venv
 echo -n -e "${TEXT_INFO} Removing the venv"
-sudo -u pangio rm -rf /home/pangio/venv 2>&1 ${LOGFILE}
+sudo -u pangio rm -rf /home/pangio/venv &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Removed the venv"
@@ -437,11 +437,11 @@ fi
 
 # Copy the Pangio files to the Pangio user's home directory
 echo -n -e "${TEXT_INFO} Copying the Pangio files to the Pangio user's home directory"
-cp -r ../ingest /home/pangio/ingest 2>&1 ${LOGFILE}
-cp -r ../sender /home/pangio/sender 2>&1 ${LOGFILE}
-cp -r ../listener /home/pangio/listener 2>&1 ${LOGFILE}
-cp ../.env.example /home/pangio/.env 2>&1 ${LOGFILE}
-cp ../docker-compose.yml /home/pangio/docker-compose.yml 2>&1 ${LOGFILE}
+cp -r ../ingest /home/pangio/ingest &>> ${LOGFILE}
+cp -r ../sender /home/pangio/sender &>> ${LOGFILE}
+cp -r ../listener /home/pangio/listener &>> ${LOGFILE}
+cp ../.env.example /home/pangio/.env &>> ${LOGFILE}
+cp ../docker-compose.yml /home/pangio/docker-compose.yml &>> ${LOGFILE}
 echo -e "${TEXT_SUCC} Copied the Pangio files to the Pangio user's home directory"
 
 # Prompt the user for their phone number. Retry until a valid number is entered.
@@ -454,13 +454,13 @@ done
 
 # Replace the placeholder phone number in the .env file with the user's phone number
 echo -n -e "${TEXT_INFO} Setting exfiltration number"
-sed -i "s/PANGIO_GSM_REMOTE_NUMBER=\"\+33613121337\"/PANGIO_GSM_REMOTE_NUMBER=\"$phone_number\"/g" /home/pangio/.env 2>&1 ${LOGFILE}
+sed -i "s/PANGIO_GSM_REMOTE_NUMBER=\"\+33613121337\"/PANGIO_GSM_REMOTE_NUMBER=\"$phone_number\"/g" /home/pangio/.env &>> ${LOGFILE}
 echo -e "${TEXT_SUCC} Exfiltration number set"
 
 # Set the MariaDB password
 MARIADB_PASSWORD=$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')
 echo -n -e "${TEXT_INFO} Setting MariaDB password"
-sed -i "s/PANGIO_DB_PASSWORD=\"changeme\"/PANGIO_DB_PASSWORD=\"$MARIADB_PASSWORD\"/g" /home/pangio/.env 2>&1 ${LOGFILE}
+sed -i "s/PANGIO_DB_PASSWORD=\"changeme\"/PANGIO_DB_PASSWORD=\"$MARIADB_PASSWORD\"/g" /home/pangio/.env &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Set MariaDB password"
@@ -473,7 +473,7 @@ fi
 # Set the MariaDB root password
 MARIADB_ROOT_PASSWORD=$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')
 echo -n -e "${TEXT_INFO} Setting MariaDB root password"
-sed -i "s/PANGIO_DB_PASSWORD_ROOT=\"changemetoo\"/PANGIO_DB_PASSWORD_ROOT=\"$MARIADB_ROOT_PASSWORD\"/g" /home/pangio/.env 2>&1 ${LOGFILE}
+sed -i "s/PANGIO_DB_PASSWORD_ROOT=\"changemetoo\"/PANGIO_DB_PASSWORD_ROOT=\"$MARIADB_ROOT_PASSWORD\"/g" /home/pangio/.env &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Set MariaDB root password"
@@ -485,7 +485,7 @@ fi
 
 # Kill the Wi-Fi link
 echo -n -e "${TEXT_INFO} Killing the Wi-Fi link"
-sudo ifconfig wlan0 down 2>&1 ${LOGFILE}
+sudo ifconfig wlan0 down &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Killed the Wi-Fi link"
@@ -497,7 +497,7 @@ fi
 
 # Set Wi-Fi monitor mode
 echo -n -e "${TEXT_INFO} Enabling Wi-Fi monitor mode"
-sudo iwconfig wlan0 mode monitor 2>&1 ${LOGFILE}
+sudo iwconfig wlan0 mode monitor &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Enabled Wi-Fi monitor mode"
@@ -509,7 +509,7 @@ fi
 
 # Enable the Wi-Fi device
 echo -n -e "${TEXT_INFO} Enabling the Wi-Fi device"
-sudo ifconfig wlan0 up 2>&1 ${LOGFILE}
+sudo ifconfig wlan0 up &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Enabled the Wi-Fi device"
@@ -525,7 +525,7 @@ fi
 
 # Start the Pangio containers
 echo -n -e "${TEXT_INFO} Starting the Pangio containers"
-sudo -u pangio docker-compose -f /home/pangio/docker-compose.yml up -d 2>&1 ${LOGFILE}
+sudo -u pangio docker-compose -f /home/pangio/docker-compose.yml up -d &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Started the Pangio containers"
