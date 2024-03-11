@@ -286,11 +286,11 @@ if [ $? -eq 0 ]; then
     fi
 else
     echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} SSH host keys do not exist."
+    echo -e "${TEXT_INFO} SSH host keys do not exist."
 fi
 
 # Generate a robust SSH host key
-echo -e "${TEXT_INFO} Generating SSH host key"
+echo -n -e "${TEXT_INFO} Generating SSH host key"
 sudo ssh-keygen -a 128 -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -q -N ""
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
@@ -326,18 +326,6 @@ if [ $? -eq 0 ]; then
 else
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_FAIL} Failed to reload systemd"
-    exit 255
-fi
-
-# Enable and start hardware RNG
-echo -n -e "${TEXT_INFO} Restarting hardware RNG"
-sudo systemctl enable --now rng-tools &>> ${LOGFILE}
-if [ $? -eq 0 ]; then
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Restarted hardware RNG"
-else
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to restart hardware RNG"
     exit 255
 fi
 
