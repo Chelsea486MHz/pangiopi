@@ -1,19 +1,6 @@
 #!/bin/bash
 
-echo " _____                  _       _____ _ "
-echo "|  __ \                (_)     |  __ (_)"
-echo "| |__) |_ _ _ __   __ _ _  ___ | |__) | "
-echo "|  ___/ _\` | '_ \ / _\` | |/ _ \|  ___/ |"
-echo "| |  | (_| | | | | (_| | | (_) | |   | |"
-echo "|_|   \__,_|_| |_|\__, |_|\___/|_|   |_|"
-echo "                   __/ |               "
-echo "                  |___/                "
-echo "                             HACK THE PLANET!"
-echo "          |\   \\\\\\\\\\\\\\\\__     o"
-echo "          | \_/    o \    o"
-echo "          >  _   (( <_  oo  "
-echo "          | / \__+___/     "
-echo "          |/     |/        "
+cat pangio_banner.txt
 
 # Resets the line
 LINE_RESET='\e[2K\r'
@@ -252,65 +239,28 @@ else
 fi
 
 # Configure the Tor proxy
-echo -n -e "${TEXT_INFO} Configuring the Tor SOCKS5 proxy"
+echo -n -e "${TEXT_INFO} Installing Tor SOCKS5 proxy configuration"
 sudo cp torrc /etc/tor/torrc 2>&1 ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Configured the Tor SOCKS5 proxy"
+    echo -e "${TEXT_SUCC} Installed the Tor SOCKS5 proxy configuration"
 else
 	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to configure the Tor SOCKS5 proxy"
+    echo -e "${TEXT_FAIL} Failed to install the Tor SOCKS5 proxy configuration"
     exit 255
 fi
 
-# Disable SSH password authentication
-echo -n -e "${TEXT_INFO} Disabling SSH password authentication"
-sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config 2>&1 ${LOGFILE}
+# Install our sshd_config file
+echo -n -e "${TEXT_INFO} Installing SSH server configuration"
+sudo cp sshd_config /etc/ssh/sshd_config 2>&1 ${LOGFILE}
 if [ $? -eq 0 ]; then
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Disabling SSH password authentication"
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_SUCC} Installed SSH server configuration"
 else
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to disable SSH password authentication"
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Failed to install SSH server configuration"
     exit 255
 fi
-
-# Allow SSH pubkey authentication
-echo -n -e "${TEXT_INFO} Allowing SSH pubkey authentication"
-sudo sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/g' /etc/ssh/sshd_config 2>&1 ${LOGFILE}
-if [ $? -eq 0 ]; then
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Allowing SSH pubkey authentication"
-else
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to allow SSH pubkey authentication"
-    exit 255
-fi
-
-# Allow SSH root login
-echo -n -e "${TEXT_INFO} Allowing SSH root login"
-sudo sed -i 's/#PermitRootLogin no/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config 2>&1 ${LOGFILE}
-if [ $? -eq 0 ]; then
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Allowing SSH root login"
-else
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to allow SSH root login"
-    exit 255
-fi
-
-# Restrict SSH keys to Ed25519
-echo -n -e "${TEXT_INFO} Restricting SSH keys to Ed25519"
-sudo echo "PubkeyAcceptedKeyTypes ssh-ed25519" >> /etc/ssh/sshd_config
-if [ $? -eq 0 ]; then
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Restricted SSH keys to Ed25519"
-else
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to restrict SSH keys to Ed25519"
-    exit 255
-fi
-echo -e "${TEXT_SUCC} Restricted SSH keys to Ed25519"
 
 # Generate a robust SSH host key
 echo -e "${TEXT_INFO} Generating SSH host key"
