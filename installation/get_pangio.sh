@@ -434,6 +434,8 @@ else
 fi
 
 # Create the Pangio user PGP key
+# We're using a python script to do it, because in all honesty
+# the GPG cli is a pain in the ass
 echo -n -e "${TEXT_INFO} Creating the Pangio user PGP key"
 cp init_pgp.py /home/pangio/init_pgp.py
 chown pangio:pangio /home/pangio/init_pgp.py
@@ -444,18 +446,6 @@ if [ $? -eq 0 ]; then
 else
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_FAIL} Failed to create the Pangio user PGP key"
-    exit 255
-fi
-
-# Remove the venv
-echo -n -e "${TEXT_INFO} Removing the venv"
-sudo -u pangio rm -rf /home/pangio/venv 2>&1 ${LOGFILE}
-if [ $? -eq 0 ]; then
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Removed the venv"
-else
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to remove the venv"
     exit 255
 fi
 
@@ -471,17 +461,17 @@ else
     exit 255
 fi
 
-#################
-#################
-#################
-
-# Communicate the onion address and auth cookie to the user
-echo -e "${TEXT_INFO} Make note of the following onion address and auth cookie!"
-cat /var/lib/tor/ssh/hostname
-
-# Communicate the SSH fingerprint to the user
-echo -e "${TEXT_INFO} Make note of the following SSH fingerprint!"
-ssh-keygen -l -f /etc/ssh/ssh_host_ed25519_key.pub
+# Remove the venv
+echo -n -e "${TEXT_INFO} Removing the venv"
+sudo -u pangio rm -rf /home/pangio/venv 2>&1 ${LOGFILE}
+if [ $? -eq 0 ]; then
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_SUCC} Removed the venv"
+else
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Failed to remove the venv"
+    exit 255
+fi
 
 #################
 #################
@@ -500,34 +490,100 @@ echo -e "${TEXT_SUCC} Copied the Pangio files to the Pangio user's home director
 echo -n -e "${TEXT_INFO} Enter the phone number you'll exfiltrate to: "
 read phone_number
 while ! [[ $phone_number =~ ^\+[0-9]{11}$ ]]; do
-    echo -n -e "${TEXT_FAIL} Invalid phone number. Enter the phone number you'll exfiltrate to: "
+    echo -n -e "${TEXT_FAIL} Invalid phone number"
     read phone_number
 done
 
 # Replace the placeholder phone number in the .env file with the user's phone number
-echo -n -e "${TEXT_INFO} Replacing the placeholder phone number in the .env file with your phone number"
+echo -n -e "${TEXT_INFO} Setting exfiltration number"
 sed -i "s/PANGIO_GSM_REMOTE_NUMBER=\"\+33613121337\"/PANGIO_GSM_REMOTE_NUMBER=\"$phone_number\"/g" /home/pangio/.env 2>&1 ${LOGFILE}
+echo -e "${TEXT_SUCC} Exfiltration number set"
 
-# Downing the Wi-Fi interface
-echo -n -e "${TEXT_INFO} Downing the Wi-Fi interface"
-sudo ip link set wlan0 down 2>&1 ${LOGFILE}
+# Set the MariaDB password
+MARIADB_PASSWORD=$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')
+echo -n -e "${TEXT_INFO} Setting MariaDB password"
+sed -i "s/PANGIO_DB_PASSWORD=\"changeme\"/PANGIO_DB_PASSWORD=\"$MARIADB_PASSWORD\"/g" /home/pangio/.env 2>&1 ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Downed the Wi-Fi interface"
+    echo -e "${TEXT_SUCC} Set MariaDB password"
 else
     echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to down the Wi-Fi interface"
+    echo -e "${TEXT_FAIL} Failed to set MariaDB password"
     exit 255
 fi
 
-# Set the Wi-Fi interface to monitoring mode
-echo -n -e "${TEXT_INFO} Setting the Wi-Fi interface to monitoring mode"
-sudo airmon-ng start wlan0 2>&1 ${LOGFILE}
+# Set the MariaDB root password
+MARIADB_ROOT_PASSWORD=$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')
+echo -n -e "${TEXT_INFO} Setting MariaDB root password"
+sed -i "s/PANGIO_DB_PASSWORD_ROOT=\"changemetoo\"/PANGIO_DB_PASSWORD_ROOT=\"$MARIADB_ROOT_PASSWORD\"/g" /home/pangio/.env 2>&1 ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Set the Wi-Fi interface to monitoring mode"
+    echo -e "${TEXT_SUCC} Set MariaDB root password"
 else
     echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to set the Wi-Fi interface to monitoring mode"
+    echo -e "${TEXT_FAIL} Failed to set MariaDB root password"
     exit 255
 fi
+
+# Kill the Wi-Fi link
+echo -n -e "${TEXT_INFO} Killing the Wi-Fi link"
+sudo ifconfig wlan0 down 2>&1 ${LOGFILE}
+if [ $? -eq 0 ]; then
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_SUCC} Killed the Wi-Fi link"
+else
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Failed to kill the Wi-Fi link"
+    exit 255
+fi
+
+# Set Wi-Fi monitor mode
+echo -n -e "${TEXT_INFO} Enabling Wi-Fi monitor mode"
+sudo iwconfig wlan0 mode monitor 2>&1 ${LOGFILE}
+if [ $? -eq 0 ]; then
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_SUCC} Enabled Wi-Fi monitor mode"
+else
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Failed to enable Wi-Fi monitor mode"
+    exit 255
+fi
+
+# Enable the Wi-Fi device
+echo -n -e "${TEXT_INFO} Enabling the Wi-Fi device"
+sudo ifconfig wlan0 up 2>&1 ${LOGFILE}
+if [ $? -eq 0 ]; then
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_SUCC} Enabled the Wi-Fi device"
+else
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Failed to enable the Wi-Fi device"
+    exit 255
+fi
+
+#################
+#################
+#################
+
+# Start the Pangio containers
+echo -n -e "${TEXT_INFO} Starting the Pangio containers"
+sudo -u pangio docker-compose -f /home/pangio/docker-compose.yml up -d 2>&1 ${LOGFILE}
+if [ $? -eq 0 ]; then
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_SUCC} Started the Pangio containers"
+else
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Failed to start the Pangio containers"
+    exit 255
+fi
+
+# Communicate the onion address and auth cookie to the user
+echo -e "${TEXT_INFO} Make note of the following onion address and auth cookie!"
+cat /var/lib/tor/ssh/hostname
+
+# Communicate the SSH fingerprint to the user
+echo -e "${TEXT_INFO} Make note of the following SSH fingerprint!"
+ssh-keygen -l -f /etc/ssh/ssh_host_ed25519_key.pub
+
+# We're done!
+echo -e "${TEXT_SUCC} Pangio nstallation complete!"
