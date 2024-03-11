@@ -143,7 +143,6 @@ if [ $? -eq 0 ]; then
 else
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_FAIL} Failed to stop hardware RNG"
-    exit 255
 fi
 
 # Stop pppd
@@ -155,7 +154,6 @@ if [ $? -eq 0 ]; then
 else
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_FAIL} Failed to stop pppd"
-    exit 255
 fi
 
 # Stop SSH
@@ -167,7 +165,6 @@ if [ $? -eq 0 ]; then
 else
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_FAIL} Failed to stop SSH"
-    exit 255
 fi
 
 # Stop Docker
@@ -179,7 +176,6 @@ if [ $? -eq 0 ]; then
 else
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_FAIL} Failed to stop Docker"
-    exit 255
 fi
 
 # Stop Tor
@@ -191,7 +187,6 @@ if [ $? -eq 0 ]; then
 else
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_FAIL} Failed to stop the Tor SOCKS5 proxy"
-    exit 255
 fi
 
 #################
@@ -560,5 +555,17 @@ cat /var/lib/tor/ssh/hostname
 echo -e "${TEXT_INFO} Make note of the following SSH fingerprint!"
 ssh-keygen -l -f /etc/ssh/ssh_host_ed25519_key.pub
 
+# Synchronize I/O writes
+echo -n -e "${TEXT_INFO} Synchronizing I/O writes"
+sync &>> ${LOGFILE}
+if [ $? -eq 0 ]; then
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_SUCC} Synchronized I/O writes"
+else
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Failed to synchronize I/O writes"
+    exit 255
+fi
+
 # We're done!
-echo -e "${TEXT_SUCC} Pangio nstallation complete!"
+echo -e "${TEXT_SUCC} Pangio nstallation complete! Please restart your device now."
