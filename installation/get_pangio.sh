@@ -1,4 +1,4 @@
-#!/bin/bashapt-get
+#!/bin/bash
 
 # Resets the line
 LINE_RESET='\e[2K\r'
