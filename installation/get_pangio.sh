@@ -292,7 +292,7 @@ fi
 
 # Generate a robust SSH host key
 echo -e "${TEXT_INFO} Generating SSH host key"
-ssh-keygen -a 128 -t ed25519 -f /etc/ssh/ssh_host_ed25519_key
+sudo ssh-keygen -a 128 -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -q -N ""
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Generated SSH host key"
