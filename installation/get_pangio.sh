@@ -266,28 +266,27 @@ else
     exit 255
 fi
 
-# Install our sshd_config file
-echo -n -e "${TEXT_INFO} Installing SSH server configuration"
-sudo cp sshd_config /etc/ssh/sshd_config &>> ${LOGFILE}
+# Check if the SSH host keys exist
+echo -n -e "${TEXT_INFO} Checking if SSH host keys exist"
+ls /etc/ssh/ssh_host_* &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
     echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Installed SSH server configuration"
-else
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to install SSH server configuration"
-    exit 255
-fi
+    echo -e "${TEXT_INFO} SSH host keys exist. Removing"
 
-# Remove existing SSH host keys
-echo -n -e "${TEXT_INFO} Removing existing SSH host keys"
-sudo rm /etc/ssh/ssh_host_* &>> ${LOGFILE}
-if [ $? -eq 0 ]; then
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Removed existing SSH host keys"
+    # Remove existing SSH host keys
+    echo -n -e "${TEXT_INFO} Removing existing SSH host keys"
+    sudo rm /etc/ssh/ssh_host_* &>> ${LOGFILE}
+    if [ $? -eq 0 ]; then
+        echo -n -e "${LINE_RESET}"
+        echo -e "${TEXT_SUCC} Removed existing SSH host keys"
+    else
+        echo -n -e "${LINE_RESET}"
+        echo -e "${TEXT_FAIL} Failed to remove existing SSH host keys"
+        exit 255
+    fi
 else
     echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to remove existing SSH host keys"
-    exit 255
+    echo -e "${TEXT_FAIL} SSH host keys do not exist."
 fi
 
 # Generate a robust SSH host key
@@ -299,6 +298,18 @@ if [ $? -eq 0 ]; then
 else
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_FAIL} Failed to generate SSH host key"
+    exit 255
+fi
+
+# Install our sshd_config file
+echo -n -e "${TEXT_INFO} Installing SSH server configuration"
+sudo cp sshd_config /etc/ssh/sshd_config &>> ${LOGFILE}
+if [ $? -eq 0 ]; then
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_SUCC} Installed SSH server configuration"
+else
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Failed to install SSH server configuration"
     exit 255
 fi
 
