@@ -30,7 +30,7 @@ echo ""
 #################
 #################
 
-# Install the required packages
+# Refreshing package cache
 echo -n -e "${TEXT_INFO} Running apt-update"
 sudo apt update &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
@@ -41,6 +41,20 @@ else
     echo -e "${TEXT_FAIL} Failed to update the package list"
     exit 255
 fi
+
+# Installing the dependencies
+echo -n -e "${TEXT_INFO} Installing dependencies"
+for dep in ${dependencies}; do
+    sudo apt install $dep -y &>> ${LOGFILE}
+    if [ $? -eq 0 ]; then
+        echo -n -e "${LINE_RESET}"
+        echo -e "${TEXT_SUCC} Installed dependencies"
+    else
+        echo -n -e "${LINE_RESET}"
+        echo -e "${TEXT_FAIL} Failed to install dependencies"
+        exit 255
+    fi
+done
 
 # Remove existing Docker packages
 echo -n -e "${TEXT_INFO} Removing existing Docker packages"
@@ -82,7 +96,7 @@ else
 fi
 
 # Add the Docker repo
-echo -e "${TEXT_INFO} Adding the Docker repository"
+echo -n -e "${TEXT_INFO} Adding the Docker repository"
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
