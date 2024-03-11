@@ -26,6 +26,8 @@ echo ""
 echo ""
 echo ""
 
+echo "Pangio Install" > ${LOGFILE}
+
 #################
 #################
 #################
@@ -43,15 +45,16 @@ else
 fi
 
 # Installing the dependencies
-echo -n -e "${TEXT_INFO} Installing dependencies"
+echo -e "${TEXT_INFO} Installing dependencies"
 for dep in ${dependencies}; do
+    echo -n -e "${TEXT_INFO} Installing dependency $dep"
     sudo apt install $dep -y &>> ${LOGFILE}
     if [ $? -eq 0 ]; then
         echo -n -e "${LINE_RESET}"
-        echo -e "${TEXT_SUCC} Installed dependencies"
+        echo -e "${TEXT_SUCC} Installed dependency $dep"
     else
         echo -n -e "${LINE_RESET}"
-        echo -e "${TEXT_FAIL} Failed to install dependencies"
+        echo -e "${TEXT_FAIL} Failed to install dependency $dep"
         exit 255
     fi
 done
@@ -59,7 +62,7 @@ done
 # Remove existing Docker packages
 echo -n -e "${TEXT_INFO} Removing existing Docker packages"
 for pkg in ${docker_pkg_to_remove}; do
-    sudo apt remove $pkg -y
+    sudo apt remove $pkg -y &>> ${LOGFILE}
     if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
         echo -e "${TEXT_SUCC} Removed $pkg"
