@@ -196,26 +196,37 @@ fi
 #################
 #################
 
-# Create Docker group
-echo -n -e "${TEXT_INFO} Creating Docker group"
-sudo groupadd docker &>> ${LOGFILE}
+# Check if Docker group exists
+echo -n -e "${TEXT_INFO} Checking if Docker group exists"
+getent group docker &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Created Docker group"
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_INFO} Docker group exists. Skipping"
 else
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to create Docker group. Does it already exist?"
-fi
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Docker group does not exist. Creating"
 
-# Add current user to Docker group
-echo -n -e "${TEXT_INFO} Adding current user to Docker group"
-sudo usermod -aG docker $USER &>> ${LOGFILE}
-if [ $? -eq 0 ]; then
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Added current user to Docker group"
-else
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to add current user to Docker group. Is the user already a member?"
+    # Create Docker group
+    echo -n -e "${TEXT_INFO} Creating Docker group"
+    sudo groupadd docker &>> ${LOGFILE}
+    if [ $? -eq 0 ]; then
+        echo -n -e "${LINE_RESET}"
+        echo -e "${TEXT_SUCC} Created Docker group"
+    else
+        echo -n -e "${LINE_RESET}"
+        echo -e "${TEXT_FAIL} Failed to create Docker group. Does it already exist?"
+    fi
+
+    # Add current user to Docker group
+    echo -n -e "${TEXT_INFO} Adding current user to Docker group"
+    sudo usermod -aG docker $USER &>> ${LOGFILE}
+    if [ $? -eq 0 ]; then
+        echo -n -e "${LINE_RESET}"
+        echo -e "${TEXT_SUCC} Added current user to Docker group"
+    else
+        echo -n -e "${LINE_RESET}"
+        echo -e "${TEXT_FAIL} Failed to add current user to Docker group. Is the user already a member?"
+    fi
 fi
 
 # Configure rng-tools
@@ -368,16 +379,27 @@ fi
 #################
 #################
 
-# Create the Pangio user
-echo -n -e "${TEXT_INFO} Creating the Pangio user"
-sudo useradd -m pangio &>> ${LOGFILE}
+# Check if the Pangio user exists
+echo -n -e "${TEXT_INFO} Checking if the Pangio user exists"
+getent passwd pangio &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Created the Pangio user"
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_INFO} Pangio user exists. Skipping"
 else
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to create the Pangio user"
-    exit 255
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Pangio user does not exist. Creating"
+
+    # Create the Pangio user
+    echo -n -e "${TEXT_INFO} Creating the Pangio user"
+    sudo useradd -m pangio &>> ${LOGFILE}
+    if [ $? -eq 0 ]; then
+        echo -n -e "${LINE_RESET}"
+        echo -e "${TEXT_SUCC} Created the Pangio user"
+    else
+        echo -n -e "${LINE_RESET}"
+        echo -e "${TEXT_FAIL} Failed to create the Pangio user"
+        exit 255
+    fi
 fi
 
 # Create a venv for pangio
@@ -496,41 +518,40 @@ else
     exit 255
 fi
 
-# Kill the Wi-Fi link
-echo -n -e "${TEXT_INFO} Killing the Wi-Fi link"
-sudo ifconfig wlan0 down &>> ${LOGFILE}
-if [ $? -eq 0 ]; then
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Killed the Wi-Fi link"
-else
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to kill the Wi-Fi link"
-    exit 255
-fi
-
-# Set Wi-Fi monitor mode
-echo -n -e "${TEXT_INFO} Enabling Wi-Fi monitor mode"
-sudo iwconfig wlan0 mode monitor &>> ${LOGFILE}
-if [ $? -eq 0 ]; then
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Enabled Wi-Fi monitor mode"
-else
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to enable Wi-Fi monitor mode"
-    exit 255
-fi
-
-# Enable the Wi-Fi device
-echo -n -e "${TEXT_INFO} Enabling the Wi-Fi device"
-sudo ifconfig wlan0 up &>> ${LOGFILE}
-if [ $? -eq 0 ]; then
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Enabled the Wi-Fi device"
-else
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to enable the Wi-Fi device"
-    exit 255
-fi
+## Kill the Wi-Fi link
+#echo -n -e "${TEXT_INFO} Killing the Wi-Fi link"
+#sudo ifconfig wlan0 down &>> ${LOGFILE}
+#if [ $? -eq 0 ]; then
+#    echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_SUCC} Killed the Wi-Fi link"
+#else
+#    echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_FAIL} Failed to kill the Wi-Fi link"
+#    exit 255
+#fi
+#
+## Set Wi-Fi monitor mode
+#echo -n -e "${TEXT_INFO} Enabling Wi-Fi monitor mode"
+#sudo iwconfig wlan0 mode monitor &>> ${LOGFILE}
+#if [ $? -eq 0 ]; then
+#    echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_SUCC} Enabled Wi-Fi monitor mode"
+#else
+#    echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_FAIL} Failed to enable Wi-Fi monitor mode"
+#fi
+#
+## Enable the Wi-Fi device
+#echo -n -e "${TEXT_INFO} Enabling the Wi-Fi device"
+#sudo ifconfig wlan0 up &>> ${LOGFILE}
+#if [ $? -eq 0 ]; then
+#    echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_SUCC} Enabled the Wi-Fi device"
+#else
+#    echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_FAIL} Failed to enable the Wi-Fi device"
+#    exit 255
+#fi
 
 #################
 #################
