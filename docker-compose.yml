@@ -19,6 +19,8 @@ services:
     restart: unless-stopped
     networks:
       - network_pangio
+    volumes:
+      - ingest/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     environment:
       TZ: ${PANGIO_TIMEZONE}
       PUID: ${PANGIO_UID}

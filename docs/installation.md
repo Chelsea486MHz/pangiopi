@@ -116,12 +116,17 @@ In the folder, create the `authorized_keys` file, and paste your SSH public key 
 
 `$ vim /root/.ssh/authorized_keys`
 
-Now, configure `/etc/ssh/sshd_config` to refuse password connections:
+Generate a strong host key:
+
+`$ sudo ssh-keygen -a 128 -t ed25519 -f /etc/ssh/ssh_host_ed25519_key`
+
+Now, configure `/etc/ssh/sshd_config`:
 
 ```
 PermitRootLogin prohibit-password
 PasswordAuthentication no
 PubkeyAuthentication yes
+PubkeyAcceptedKeyTypes ssh-ed25519
 ```
 
 ### 4. Tor setup

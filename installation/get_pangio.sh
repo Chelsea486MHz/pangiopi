@@ -313,11 +313,16 @@ fi
 echo -e "${TEXT_SUCC} Restricted SSH keys to Ed25519"
 
 # Generate a robust SSH host key
-echo -n -e "${LINE_RESET}"
-echo -e "${TEXT_INFO} Generating SSH keypair"
-ssh-keygen -a 128 \
-           -t ed25519 \
-           -f /etc/ssh/ssh_host_ed25519_key
+echo -e "${TEXT_INFO} Generating SSH host key"
+ssh-keygen -a 128 -t ed25519 -f /etc/ssh/ssh_host_ed25519_key
+if [ $? -eq 0 ]; then
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_SUCC} Generated SSH host key"
+else
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Failed to generate SSH host key"
+    exit 255
+fi
 
 #################
 #################

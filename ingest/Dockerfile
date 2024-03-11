@@ -50,6 +50,10 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 # Install the app
 COPY --chown=$APP_USER:$APP_USER ./app.py $APP_DIR/app.py
+COPY --chown=$APP_USER:$APP_USER ./piups.py $APP_DIR/piups.py
+COPY --chown=$APP_USER:$APP_USER ./log_battery.py $APP_DIR/log_battery.py
+COPY --chown=$APP_USER:$APP_USER ./log_gps.py $APP_DIR/log_gps.py
+COPY --chown=$APP_USER:$APP_USER ./log_wap.py $APP_DIR/log_wap.py
 
 # Run the app
 CMD ["python", "app.py"]
