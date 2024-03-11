@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cat pangio_banner.txt
-
 # Resets the line
 LINE_RESET='\e[2K\r'
 
@@ -23,13 +21,18 @@ dependencies=`cat dependencies.txt`
 docker_pkg_to_remove=`cat docker_pkg_to_remove.txt`
 docker_pkg_to_install=`cat docker_pkg_to_install.txt`
 
+cat pangio_banner.txt
+echo ""
+echo ""
+echo ""
+
 #################
 #################
 #################
 
 # Install the required packages
 echo -n -e "${TEXT_INFO} Running apt-update"
-sudo apt-get update -y 2>&1 ${LOGFILE} 
+sudo apt-get update 2>&1 ${LOGFILE} 
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_INFO} Updated the package list"
@@ -88,7 +91,7 @@ echo -e "${TEXT_SUCC} Added the Docker repository"
 
 # Run apt-update again
 echo -n -e "${TEXT_INFO} Running apt-update"
-sudo apt-get update -y 2>&1 ${LOGFILE}
+sudo apt-get update 2>&1 ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Updated the package list"
