@@ -37,7 +37,7 @@ echo -n -e "${TEXT_INFO} Running apt-update"
 sudo apt update &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_INFO} Updated the package list"
+    echo -e "${TEXT_SUCC} Updated the package list"
 else
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_FAIL} Failed to update the package list"
@@ -98,8 +98,7 @@ else
     exit 255
 fi
 
-# Add the Docker repo
-echo -n -e "${TEXT_INFO} Adding the Docker repository"
+# Add the Docker repository
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
@@ -119,16 +118,20 @@ else
 fi
 
 # Install Docker
-echo -n -e "${TEXT_INFO} Installing Docker"
-sudo apt install ${docker_pkg_to_install} -y &>> ${LOGFILE}
-if [ $? -eq 0 ]; then
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Installed Docker"
-else
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to install Docker"
-    exit 255
-fi
+echo -e "${TEXT_INFO} Installing Docker packages"
+for pkg in ${docker_pkg_to_install}; do
+    echo -n -e "${TEXT_INFO} Installing Docker package \'$pkg\'"
+    sudo apt install ${docker_pkg_to_install} -y &>> ${LOGFILE}
+    if [ $? -eq 0 ]; then
+    echo -n -e "${LINE_RESET}"
+        echo -e "${TEXT_SUCC} Installed Docker package \'$pkg\'"
+    else
+    echo -n -e "${LINE_RESET}"
+        echo -e "${TEXT_FAIL} Failed to install Docker package \'$pkg\'"
+        exit 255
+    fi
+done
+echo -e "${TEXT_SUCC} Installed Docker packages"
 
 #################
 #################
@@ -180,7 +183,7 @@ fi
 
 # Stop Tor
 echo -n -e "${TEXT_INFO} Stopping the Tor SOCKS5 proxy"
-sudo systemctl stop
+sudo systemctl stop tor@default.service &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Stopped the Tor SOCKS5 proxy"
@@ -201,8 +204,7 @@ if [ $? -eq 0 ]; then
     echo -e "${TEXT_SUCC} Created Docker group"
 else
 	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to create Docker group"
-    exit 255
+    echo -e "${TEXT_FAIL} Failed to create Docker group. Does it already exist?"
 fi
 
 # Add current user to Docker group
@@ -213,8 +215,7 @@ if [ $? -eq 0 ]; then
     echo -e "${TEXT_SUCC} Added current user to Docker group"
 else
 	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to add current user to Docker group"
-    exit 255
+    echo -e "${TEXT_FAIL} Failed to add current user to Docker group. Is the user already a member?"
 fi
 
 # Configure rng-tools
