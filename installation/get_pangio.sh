@@ -32,7 +32,7 @@ echo ""
 
 # Install the required packages
 echo -n -e "${TEXT_INFO} Running apt-update"
-sudo apt-get update 2>&1 ${LOGFILE} 
+sudo apt update 2>&1 ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_INFO} Updated the package list"
@@ -45,7 +45,7 @@ fi
 # Remove existing Docker packages
 echo -n -e "${TEXT_INFO} Removing existing Docker packages"
 for pkg in ${docker_pkg_to_remove}; do
-    sudo apt-get remove $pkg -y
+    sudo apt remove $pkg -y
     if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
         echo -e "${TEXT_SUCC} Removed $pkg"
@@ -91,7 +91,7 @@ echo -e "${TEXT_SUCC} Added the Docker repository"
 
 # Run apt-update again
 echo -n -e "${TEXT_INFO} Running apt-update"
-sudo apt-get update 2>&1 ${LOGFILE}
+sudo apt update 2>&1 ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Updated the package list"
@@ -103,7 +103,7 @@ fi
 
 # Install Docker
 echo -n -e "${TEXT_INFO} Installing Docker"
-sudo apt-get install ${docker_pkg_to_install} -y 2>&1 ${LOGFILE}
+sudo apt install ${docker_pkg_to_install} -y 2>&1 ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Installed Docker"

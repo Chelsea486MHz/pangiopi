@@ -29,10 +29,7 @@ You'll need a fresh Ubuntu Server 64 installation on your Raspberry Pi Zero 2WH.
 
 Clone the repo and navigate to `installation`. From there, run the shell script as an unpriviledged user:
 
-```
-$ chmod +x get_pangio.sh
-$ ./get_pangio.sh
-```
+`$ ./get_pangio.sh`
 
 If you want to manually install everything, see [installation.md](./docs/installation.md)
 
