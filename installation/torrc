@@ -2,7 +2,7 @@ SocksPort 172.17.0.1:9050
 SocksPolicy accept 172.28.0.0/24
 HiddenServiceDir /var/lib/tor/ssh/
 HiddenServicePort 22 127.0.0.1:22
-HiddenServiceAuthorizeClient stealth pangioremote
+HiddenServiceAuthorizeClient stealth root
 Log notice file /var/log/tor/notices.log
 ControlPort 9051
 ControlPortWriteToFile /var/lib/tor/control_auth_cookie
