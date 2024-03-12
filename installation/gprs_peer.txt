@@ -1,13 +1,15 @@
+user "lmfr"
 connect "/usr/sbin/chat -v -f /etc/chatscripts/gprs"
-/dev/serial0
+/dev/ttyS0
 115200
 nocrtscts
 debug
+
 nodetach
 ipcp-accept-local
 ipcp-accept-remote
 noipdefault
 usepeerdns
 defaultroute
-persist
+#persist
 noauth

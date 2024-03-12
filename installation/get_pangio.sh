@@ -230,6 +230,18 @@ else
     exit 255
 fi
 
+# Create ppp device node
+echo -n -e "${TEXT_INFO} Creating ppp device node"
+sudo mknod /dev/ppp c 108 0 &>> ${LOGFILE}
+if [ $? -eq 0 ]; then
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_SUCC} Created ppp device node"
+else
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Failed to create ppp device node"
+    exit 255
+fi
+
 # Configure dial-up connection
 echo -n -e "${TEXT_INFO} Configuring dial-up connection"
 sudo cp gprs_peer.txt /etc/ppp/peers/gprs &>> ${LOGFILE}
@@ -239,6 +251,18 @@ if [ $? -eq 0 ]; then
 else
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_FAIL} Failed to configure dial-up connection"
+    exit 255
+fi
+
+# Install the chatscript
+echo -n -e "${TEXT_INFO} Installing chatscript"
+sudo cp chatscript.txt /etc/chatscripts/gprs &>> ${LOGFILE}
+if [ $? -eq 0 ]; then
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_SUCC} Installed chatscript"
+else
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Failed to install chatscript"
     exit 255
 fi
 
@@ -310,6 +334,18 @@ if [ $? -eq 0 ]; then
 else
     echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_FAIL} Failed to install SSH server configuration"
+    exit 255
+fi
+
+# Install the banner
+echo -n -e "${TEXT_INFO} Installing SSH banner"
+sudo cp banner /etc/ssh/banner &>> ${LOGFILE}
+if [ $? -eq 0 ]; then
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_SUCC} Installed SSH banner"
+else
+    echo -n -e "${LINE_RESET}"
+    echo -e "${TEXT_FAIL} Failed to install SSH banner"
     exit 255
 fi
 

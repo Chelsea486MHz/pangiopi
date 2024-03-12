@@ -1,4 +1,6 @@
 mysql-connector-python
 smbus2
 gsmHat
+RPi.GPIO
 scapy
+pyserial
