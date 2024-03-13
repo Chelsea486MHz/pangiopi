@@ -19,13 +19,17 @@ The PangioPi continuously ingests and sniffs the following data:
 It can exfiltrate the data with PGP over the following transport layers:
 - Phone calls (QRCode over SSTV)
 - SMS
-- 3G mobile data
+- 4G mobile data
 
 You can also SSH into your PangioPi through the Tor network, and eavesdrop on its surroundings by listening in real time to what its microphone is picking up.
 
-## Installation guide
+## System requirements
 
-You'll need a fresh Ubuntu Server 64 installation on your Raspberry Pi Zero 2WH.
+You'll need a fresh Kali Linux installation on your Raspberry Pi Zero 2WH. We use Kali Linux because its kernel provides necessary features Ubuntu doesn't.
+
+Make sure you added your Ed25519 SSH public key to the root account's authorized keys. Also disable `lightdm` if you want some speedup as it's not necessary.
+
+## Installation guide
 
 Clone the repo and navigate to `installation`. From there, run the shell script as an unpriviledged user:
 
