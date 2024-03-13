@@ -31,7 +31,7 @@ Make sure you added your Ed25519 SSH public key to the root account's authorized
 
 ## Installation guide
 
-Clone the repo and navigate to `installation`. From there, run the shell script as an unpriviledged user:
+Clone the repo and navigate to `installation`. From there, run the shell script as root:
 
 `$ ./get_pangio.sh`
 
