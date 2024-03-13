@@ -77,7 +77,7 @@ done
 install -m 0755 -d /etc/apt/keyrings &>> ${LOGFILE}
 
 echo -n -e "${TEXT_INFO} Adding the official Docker PGP key"
-curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc &>> ${LOGFILE}
+curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg &>> ${LOGFILE}
 if [ $? -eq 0 ]; then
 	echo -n -e "${LINE_RESET}"
     echo -e "${TEXT_SUCC} Added the official Docker PGP key"
@@ -100,9 +100,8 @@ fi
 
 # Add the Docker repository
 echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  tee /etc/apt/sources.list.d/docker.list > /dev/null
+  "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list &>> ${LOGFILE}
 echo -e "${TEXT_SUCC} Added the Docker repository"
 
 # Run apt-update again
