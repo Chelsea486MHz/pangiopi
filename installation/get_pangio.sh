@@ -230,53 +230,53 @@ else
     exit 255
 fi
 
-# Create ppp device node
-echo -n -e "${TEXT_INFO} Creating ppp device node"
-sudo mknod /dev/ppp c 108 0 &>> ${LOGFILE}
-if [ $? -eq 0 ]; then
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Created ppp device node"
-else
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to create ppp device node"
-    exit 255
-fi
+## Create ppp device node
+#echo -n -e "${TEXT_INFO} Creating ppp device node"
+#sudo mknod /dev/ppp c 108 0 &>> ${LOGFILE}
+#if [ $? -eq 0 ]; then
+#    echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_SUCC} Created ppp device node"
+#else
+#    echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_FAIL} Failed to create ppp device node"
+#    exit 255
+#fi
 
-# Configure dial-up connection
-echo -n -e "${TEXT_INFO} Configuring dial-up connection"
-sudo cp gprs_peer.txt /etc/ppp/peers/gprs &>> ${LOGFILE}
-if [ $? -eq 0 ]; then
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Configured dial-up connection"
-else
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to configure dial-up connection"
-    exit 255
-fi
+## Configure dial-up connection
+#echo -n -e "${TEXT_INFO} Configuring dial-up connection"
+#sudo cp gprs_peer.txt /etc/ppp/peers/gprs &>> ${LOGFILE}
+#if [ $? -eq 0 ]; then
+#	echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_SUCC} Configured dial-up connection"
+#else
+#	echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_FAIL} Failed to configure dial-up connection"
+#    exit 255
+#fi
 
-# Install the chatscript
-echo -n -e "${TEXT_INFO} Installing chatscript"
-sudo cp chatscript.txt /etc/chatscripts/gprs &>> ${LOGFILE}
-if [ $? -eq 0 ]; then
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Installed chatscript"
-else
-    echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to install chatscript"
-    exit 255
-fi
+## Install the chatscript
+#echo -n -e "${TEXT_INFO} Installing chatscript"
+#sudo cp chatscript.txt /etc/chatscripts/gprs &>> ${LOGFILE}
+#if [ $? -eq 0 ]; then
+#    echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_SUCC} Installed chatscript"
+#else
+#    echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_FAIL} Failed to install chatscript"
+#    exit 255
+#fi
 
-# Create a systemd unit
-echo -n -e "${TEXT_INFO} Creating systemd unit for pppd"
-sudo cp ppphat.service /etc/systemd/system/ppphat.service &>> ${LOGFILE}
-if [ $? -eq 0 ]; then
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_SUCC} Created systemd unit for pppd"
-else
-	echo -n -e "${LINE_RESET}"
-    echo -e "${TEXT_FAIL} Failed to create systemd unit for pppd"
-    exit 255
-fi
+## Create a systemd unit
+#echo -n -e "${TEXT_INFO} Creating systemd unit for pppd"
+#sudo cp ppphat.service /etc/systemd/system/ppphat.service &>> ${LOGFILE}
+#if [ $? -eq 0 ]; then
+#	echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_SUCC} Created systemd unit for pppd"
+#else
+#	echo -n -e "${LINE_RESET}"
+#    echo -e "${TEXT_FAIL} Failed to create systemd unit for pppd"
+#    exit 255
+#fi
 
 # Configure the Tor proxy
 echo -n -e "${TEXT_INFO} Installing Tor SOCKS5 proxy configuration"
@@ -365,15 +365,15 @@ else
     exit 255
 fi
 
-# Enable and start pppd
-echo -e "${TEXT_INFO} Enabling and starting pppd"
-sudo systemctl enable --now ppphat.service &>> ${LOGFILE}
-if [ $? -eq 0 ]; then
-    echo -e "${TEXT_SUCC} Enabled and started pppd"
-else
-    echo -e "${TEXT_FAIL} Failed to enable and start pppd"
-    exit 255
-fi
+## Enable and start pppd
+#echo -e "${TEXT_INFO} Enabling and starting pppd"
+#sudo systemctl enable --now ppphat.service &>> ${LOGFILE}
+#if [ $? -eq 0 ]; then
+#    echo -e "${TEXT_SUCC} Enabled and started pppd"
+#else
+#    echo -e "${TEXT_FAIL} Failed to enable and start pppd"
+#    exit 255
+#fi
 
 # Enable and start SSH
 echo -n -e "${TEXT_INFO} Enabling and starting SSH"
@@ -605,12 +605,12 @@ else
     exit 255
 fi
 
-# Communicate the onion address and auth cookie to the user
-echo -e "${TEXT_INFO} Make note of the following onion address and auth cookie!"
+# Communicate the onion address to the user
+echo -e "${TEXT_INFO} Make note of the following onion address! It's how you will SSH into your pangio."
 cat /var/lib/tor/ssh/hostname
 
 # Communicate the SSH fingerprint to the user
-echo -e "${TEXT_INFO} Make note of the following SSH fingerprint!"
+echo -e "${TEXT_INFO} Make note of the following SSH fingerprint to avoid MitM attacks!"
 ssh-keygen -l -f /etc/ssh/ssh_host_ed25519_key.pub
 
 # Synchronize I/O writes
@@ -624,6 +624,5 @@ else
     echo -e "${TEXT_FAIL} Failed to synchronize I/O writes"
     exit 255
 fi
-
 # We're done!
 echo -e "${TEXT_SUCC} Pangio nstallation complete! Please restart your device now."

@@ -8,3 +8,5 @@ ca-certificates
 curl
 tor
 build-essential
+linux-modules-6.5.0-1005-raspi
+linux-modules-extra-6.5.0-1005-raspi

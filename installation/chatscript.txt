@@ -5,6 +5,7 @@ ABORT   "NO DIALTONE"
 ABORT   "NO ANSWER"
 ABORT   "DELAYED"
 ABORT   "ERROR"
+
 ABORT   "+CGATT: 0"
 
 ""      AT
@@ -12,7 +13,12 @@ TIMEOUT 12
 OK      ATH
 OK      ATE1
 
+# PIN if required
+#OK     "AT+CPIN=1234"
+
+OK      AT+CFUN=1
+
 OK      AT+CGDCONT=1,"IP","lmfr"
-OK      ATD*99***1#
+OK      ATD*99#
 TIMEOUT 22
 CONNECT ""
