@@ -1,12 +1,9 @@
 python3.11
 python3.11-dev
 python3.11-venv
-python3-lgpio
 rng-tools
 ppp
 ca-certificates
 curl
 tor
 build-essential
-linux-modules-6.5.0-1005-raspi
-linux-modules-extra-6.5.0-1005-raspi
