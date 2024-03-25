@@ -63,10 +63,11 @@ The PangioPI software stack uses the following components in Docker:
 But also the following tools ready to be used
 - `pangio-shredder`: Shred the device in case it gets discovered
 
-As for the hardware, the following components are used:
+As for the hardware, the following components are required:
 - Raspberry Pi Zero 2WH
 - Pi Zero UPS lite
 - Waveshare SIM7600G-H HAT (with hardware modifications)
+- YubiKey 5 Nano
 
 ## Note on protecting women
 
@@ -83,9 +84,9 @@ The following data is beind considered for ingestion, but due to the aforementio
 [ ] Pangio
     [ ] Docker stack
         [ ] pangio-sender
-            [X] Security
-                [X] Data encryption
-                [X] Digital signatures
+            [ ] Yubikey integration
+                [ ] Data encryption
+                [ ] Digital signatures
             [X] Compression
             [ ] Exfiltration over SMS
             [X] Exfiltration over phone call
@@ -111,9 +112,10 @@ The following data is beind considered for ingestion, but due to the aforementio
         [ ] SIM7600G-H
         [X] UPS Lite
     [ ] Tools
-        [X] Tor proxy
-        [X] GPG configurator
-        [ ] Dial-Up configurator
+        [X] Tor proxy configuration script
+        [X] GPG configuration script
+        [ ] Dial-Up configuration (PPP)
+        [ ] YubiKey configuration script
         [ ] Device shredder
     [ ] System
         [ ] Security hardening
