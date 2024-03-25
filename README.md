@@ -63,11 +63,9 @@ The PangioPI software stack uses the following components in Docker:
 But also the following tools ready to be used
 - `pangio-shredder`: Shred the device in case it gets discovered
 
-As for the hardware, the following components are required:
-- Raspberry Pi Zero 2WH
-- Pi Zero UPS lite
-- Waveshare SIM7600G-H HAT (with hardware modifications)
-- YubiKey 5 Nano
+## Required hardware
+
+See [hardware.md](./docs/hardware.md)
 
 ## Note on protecting women
 

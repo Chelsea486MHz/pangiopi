@@ -7,3 +7,5 @@
 ---
 
 ## User manual
+
+This documents serves as the user manual for the Pangio.
