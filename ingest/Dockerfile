@@ -17,14 +17,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 #
 FROM python:3.11-slim
 
-# Install dependencies
-RUN apt update && \
-    apt install -y --no-install-recommends \
-    gnupg2 && \
-    liblzma-dev && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
-
 # Container settings
 ENV APP_USER 'pangiopi'
 ENV APP_DIR '/home/pangiopi'
