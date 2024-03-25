@@ -8,11 +8,11 @@
 
 ---
 
-## What is PangioPi?
+## 🤔 What is PangioPi?
 
-The PangioPi is a sneaky little hacking companion that is easy to hide and use as a remote attack platform. It is meant to be controlled from a WebUI over Tor.
+The Pangio is a sneaky little hacking companion that is easy to hide and use as a remote attack platform. It is meant to be controlled from a WebUI over Tor.
 
-The PangioPi continuously ingests and sniffs the following data:
+The Pangio continuously ingests and sniffs the following data:
 - Wi-Fi access points
 - MAC addresses
 - Bluetooth advertisements
@@ -25,15 +25,15 @@ It can exfiltrate the data with PGP over the following transport layers:
 
 The Pangio can be remotely shredded at any time, protecting your identity in case it gets discovered.
 
-You can also SSH into your PangioPi through the Tor network, and eavesdrop on its surroundings by listening in real time to what its microphone is picking up.
+You can also SSH into your Pangio through the Tor network, and eavesdrop on its surroundings by listening in real time to what its microphone is picking up.
 
-## System requirements
+## 🖥️ System requirements
 
 You'll need a fresh Kali Linux installation on your Raspberry Pi Zero 2WH. We use Kali Linux because its kernel provides necessary features Ubuntu doesn't.
 
 Make sure you added your Ed25519 SSH public key to the root account's authorized keys. Also disable `lightdm` if you want some speedup as it's not necessary.
 
-## Installation guide
+## 📝 Installation guide
 
 Clone the repo and navigate to `installation`. From there, run the shell script as root:
 
@@ -41,19 +41,19 @@ Clone the repo and navigate to `installation`. From there, run the shell script 
 
 If you want to manually install everything, see [installation.md](./docs/installation.md)
 
-## Configuration guide
+## 📝 Configuration guide
 
 If you're not using the installation script, you have to follow the configuration guide.
 
 See [configuration.md](./docs/configuration.md)
 
-## User manual
+## 📝 User manual
 
 This manual is here to help you make the most of your Pangio!
 
 See [user-manual.md](./docs/user-manual.md)
 
-## Architecture
+## 📐 Architecture
 
 The PangioPI software stack uses the following components in Docker:
 - `pangio-sender`: API server that handles data exfiltration
@@ -63,11 +63,11 @@ The PangioPI software stack uses the following components in Docker:
 But also the following tools ready to be used
 - `pangio-shredder`: Shred the device in case it gets discovered
 
-## Required hardware
+## ⚙️ Required hardware
 
 See [hardware.md](./docs/hardware.md)
 
-## Note on protecting women
+## ♀️ Note on protecting women
 
 Devices with features similar as those of the Pangio (Apple Airtags, etc.) have been used in a systemic way in acts of harassment, stalking, and violence against women. Important decisions have to be made regarding what features to implement so as to not endanger women and keep the Pangio a pentesting device.
 
@@ -76,7 +76,7 @@ The following data is beind considered for ingestion, but due to the aforementio
 - Audio (onboard microphone, continuous recording)
 - Video (onboard camera, regular interval pictures)
 
-## Development progress
+## 🚧 Development progress
 
 ```
 [ ] Pangio
@@ -132,14 +132,14 @@ The following data is beind considered for ingestion, but due to the aforementio
         [ ] Flashable ISO based on Kali Linux
 ```
 
-## Contributions
+## 📝 Contributions
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md)
 
-## Code of conduct
+## 📝 Code of conduct
 
 See [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 
-## Active contributors
+## 👩‍💻 Active contributors
 
 Chelsea Murgia <[mail@chelsea486mhz.fr](mailto:mail@chelsea486mhz.fr)>
