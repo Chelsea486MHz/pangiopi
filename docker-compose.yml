@@ -20,7 +20,7 @@ services:
     networks:
       - network_pangio
     volumes:
-      - ingest/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     environment:
       TZ: ${PANGIO_TIMEZONE}
       PUID: ${PANGIO_UID}
@@ -92,7 +92,8 @@ services:
       GSM_BAUDRATE: ${PANGIO_GSM_BAUDRATE}
       REMOTE_NUMBER: ${PANGIO_GSM_REMOTE_NUMBER}
 
-  reverse-proxy:
+  # Reverse proxy, so our WebUI isn't directly facing the Internet
+  pangio-reverse-proxy:
     container_name: pangio-reverse-proxy
     image: nginx:latest
     restart: unless-stopped
