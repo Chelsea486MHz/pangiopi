@@ -35,7 +35,7 @@ services:
     container_name: pangio-sender
     build:
       context: ./sender
-      dockerfile: Dockerfile
+      dockerfile: ./sender/Dockerfile
     restart: unless-stopped
     networks:
       - network_pangio
@@ -56,7 +56,7 @@ services:
     container_name: pangio-ingest
     build:
       context: ./ingest
-      dockerfile: Dockerfile
+      dockerfile: ./ingest/Dockerfile
     restart: unless-stopped
     networks:
       - network_pangio
@@ -70,12 +70,12 @@ services:
       MYSQL_PASSWORD: ${PANGIO_DB_PASSWORD}
       PANGIO_WAP_SNIFFING_INTERFACE: ${PANGIO_WAP_SNIFFING_INTERFACE}
 
-  # Listens for incoming SMS
-  pangio-listener:
-    container_name: pangio-listener
+  # Web interface to control the Pangio
+  pangio-webui:
+    container_name: pangio-webui
     build:
-      context: ./listener
-      dockerfile: Dockerfile
+      context: ./webui
+      dockerfile: ./webui/Dockerfile
     restart: unless-stopped
     networks:
       - network_pangio
@@ -91,3 +91,20 @@ services:
       GSM_PORT: ${PANGIO_GSM_PORT}
       GSM_BAUDRATE: ${PANGIO_GSM_BAUDRATE}
       REMOTE_NUMBER: ${PANGIO_GSM_REMOTE_NUMBER}
+
+  reverse-proxy:
+    container_name: pangio-reverse-proxy
+    image: nginx:latest
+    restart: unless-stopped
+    networks:
+      - network_pangio
+    ports:
+      - 8080:80
+      - 8443:443
+    volumes:
+      - /certs:/certs:ro
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+    environment:
+      TZ: ${PANGIO_TIMEZONE}
+      PUID: ${PANGIO_UID}
+      PGID: ${PANGIO_GID}
