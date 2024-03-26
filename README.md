@@ -118,8 +118,8 @@ The following data is beind considered for ingestion, but due to the aforementio
     [ ] System
         [ ] Security hardening
             [X] SSH hardening (OpenSSH)
-            [ ] Reverse-proxy hardening (NGINX)
-                [ ] Cryptography
+            [X] Reverse-proxy hardening (NGINX)
+                [X] Cryptography
                 [ ] Certificate management
             [ ] Firewall configuration
             [ ] Fail2Ban
